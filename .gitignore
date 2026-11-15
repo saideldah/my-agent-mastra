@@ -12,3 +12,9 @@ src/mastra/public/
 .vercel
 *.duckdb
 *.duckdb.wal
+
+# Local environment files and generated artifacts
+.env.*
+!.env.example
+.DS_Store
+*.tsbuildinfo

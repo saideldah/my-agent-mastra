@@ -56,3 +56,28 @@ To learn more about Mastra, visit our [documentation](https://mastra.ai/docs/). 
 ## Deploy to the Mastra platform
 
 The [Mastra platform](https://projects.mastra.ai) provides two products for deploying and managing AI applications built with the Mastra framework. Learn more in the [Mastra platform documentation](https://mastra.ai/docs/mastra-platform/overview).
+
+## React multi-agent demo
+
+With the Mastra server running (`npm run dev` from this directory), start the UI:
+
+```shell
+cd weather-react-app
+npm run dev
+```
+
+Open the Vite URL (normally http://localhost:5173), sign in using the demo credentials configured by `DEMO_USERNAME` / `DEMO_PASSWORD`, then scroll to **Architecture decision room**. Keep the sample PostgreSQL vs SQLite/LibSQL decision or enter your own task and audience, then click **Start agent collaboration**. The existing weather interaction remains available above it.
+
+The UI calls `supervisor-agent.stream()` with the user's task, the audience in request context, and a fresh memory thread for each run. The supervisor's system instructions in `src/mastra/prompts/supervisor.prompt.ts` define the collaboration: Researcher → Analyzer → Researcher (evidence review) → Writer. This is LLM-directed delegation, so the actual calls can vary; the UI only displays calls that happened.
+
+**Live agent handoffs** shows actual `tool-call` requests and `tool-result` replies, correlated by `toolCallId`. Expand **Shared context** to see the exact earlier output reused through `contextFromRefs`; raw request/result panels expose reference IDs and metadata. Specialists communicate through Supervisor, rather than making direct peer calls. The final supervisor response streams separately. Partial outputs remain visible if a run fails. Signing out or session expiry unmounts the demo and aborts the client request; **Stop receiving** also aborts it, but is not a durable server cancellation guarantee.
+
+The UI implementation is in `weather-react-app/src/components/MultiAgentDemo.tsx`, with stream event handling in `weather-react-app/src/lib/agent-conversation.ts`. The existing supervisor and specialist configuration is in `src/mastra/agents/`.
+
+Validate the UI and handoff handling:
+
+```shell
+node --test tests/agent-conversation.test.ts
+cd weather-react-app
+npm run build
+```

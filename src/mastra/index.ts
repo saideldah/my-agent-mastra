@@ -1,22 +1,57 @@
 import { Mastra } from '@mastra/core/mastra';
-import { LibSQLStore } from '@mastra/libsql';
-import { DuckDBStore } from '@mastra/duckdb';
 import { MastraCompositeStore } from '@mastra/core/storage';
+import { DuckDBStore } from '@mastra/duckdb';
+import { LibSQLStore } from '@mastra/libsql';
 import {
-  MastraStorageExporter,
   MastraPlatformExporter,
+  MastraStorageExporter,
   Observability,
   SensitiveDataFilter,
 } from '@mastra/observability';
-import { agent } from './agents/agent';
+import {
+  agent,
+  analyzerAgent,
+  researcherAgent,
+  supervisorAgent,
+  weatherAgent,
+  writerAgent,
+} from './agents';
+import { authRoutes, demoAuth } from './auth';
+import { registeredScorers } from './evals/scorers';
 import { startScheduleTool, stopScheduleTool } from './tools/schedule-tools';
+import { weatherTool } from './tools/weather-tool';
+import { multiAgentTaskWorkflow } from './workflows';
 
 export const mastra = new Mastra({
   bundler: {
     externals: ['@duckdb/node-bindings'],
   },
-  agents: { agent },
-  tools: { startScheduleTool, stopScheduleTool },
+  agents: {
+    agent,
+    weatherAgent,
+    supervisorAgent,
+    researcherAgent,
+    analyzerAgent,
+    writerAgent,
+  },
+  workflows: {
+    multiAgentTaskWorkflow,
+  },
+  tools: {
+    startScheduleTool,
+    stopScheduleTool,
+    weatherTool,
+  },
+  scorers: registeredScorers,
+  server: {
+    auth: demoAuth,
+    apiRoutes: authRoutes,
+    cors: {
+      origin: '*',
+      allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowHeaders: ['Content-Type', 'Authorization', 'x-mastra-client-type'],
+    },
+  },
   storage: new MastraCompositeStore({
     id: 'composite-storage',
     default: new LibSQLStore({
@@ -38,3 +73,5 @@ export const mastra = new Mastra({
     },
   }),
 });
+
+await mastra.schedules.delete('weather-email-every-5m');

@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "mastra dev",
     "build": "mastra build",
-    "start": "mastra start"
+    "start": "mastra start",
+    "eval:seed": "node --import tsx src/mastra/evals/datasets/golden-cases.ts",
+    "eval:ci": "node --import tsx src/mastra/evals/ci/run-regression.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,7 @@
   "dependencies": {
     "@mastra/core": "1.83.0",
     "@mastra/duckdb": "1.19.0",
+    "@mastra/evals": "^1.10.11",
     "@mastra/libsql": "1.30.0",
     "@mastra/memory": "1.41.1",
     "@mastra/observability": "1.24.0",
