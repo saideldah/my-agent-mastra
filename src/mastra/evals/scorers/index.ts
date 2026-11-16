@@ -4,6 +4,8 @@ import {
   deterministicChecks,
   reportRubricScorer,
   taskCompletenessScorer,
+  workflowReportScorer,
+  workflowStageCompletenessScorer,
 } from './task-rubric.scorer';
 
 export {
@@ -12,6 +14,8 @@ export {
   groundTruthScorer,
   reportRubricScorer,
   taskCompletenessScorer,
+  workflowReportScorer,
+  workflowStageCompletenessScorer,
 };
 
 /**
@@ -23,6 +27,8 @@ export const registeredScorers = {
   reportRubricScorer,
   answerRelevancyScorer,
   taskCompletenessScorer,
+  workflowReportScorer,
+  workflowStageCompletenessScorer,
   noToolErrorsCheck: deterministicChecks.noToolErrors,
   calledResearcherCheck: deterministicChecks.calledResearcher,
   includesRecommendationsCheck: deterministicChecks.includesRecommendations,
