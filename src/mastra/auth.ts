@@ -93,4 +93,24 @@ export const authRoutes = [
       return c.body(null, 204);
     },
   }),
+  registerApiRoute('/runtime/status', {
+    method: 'GET',
+    requiresAuth: false,
+    handler: async c => {
+      return c.json({
+        ok: true,
+        ready: Boolean(process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY),
+        agents: [
+          'agent',
+          'generative-ui-agent',
+          'weather-agent',
+          'supervisor-agent',
+          'researcher-agent',
+          'analyzer-agent',
+          'writer-agent',
+        ],
+        workflows: ['multiAgentTaskWorkflow'],
+      });
+    },
+  }),
 ];

@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { webFetchTool, webSearchTool } from '@mastra/core/tools';
+import { webFetchTool } from '@mastra/core/tools';
 import { Memory } from '@mastra/memory';
 import { taskCompletenessScorer } from '../evals/scorers';
 import {
@@ -7,6 +7,7 @@ import {
   RESEARCHER_DESCRIPTION,
 } from '../prompts/researcher.prompt';
 import { DEFAULT_AGENT_MODEL } from '../prompts/shared-blocks';
+import { openWebSearchTool } from '../tools/open-web-search.tool';
 
 export const researcherAgent = new Agent({
   id: 'researcher-agent',
@@ -23,7 +24,7 @@ export const researcherAgent = new Agent({
     },
   }),
   tools: {
-    web_search: webSearchTool,
+    web_search: openWebSearchTool,
     web_fetch: webFetchTool,
   },
   scorers: {

@@ -11,6 +11,7 @@ import {
 import {
   agent,
   analyzerAgent,
+  generativeUiAgent,
   researcherAgent,
   supervisorAgent,
   weatherAgent,
@@ -18,6 +19,7 @@ import {
 } from './agents';
 import { authRoutes, demoAuth } from './auth';
 import { registeredScorers } from './evals/scorers';
+import { openWebSearchTool } from './tools/open-web-search.tool';
 import { startScheduleTool, stopScheduleTool } from './tools/schedule-tools';
 import { weatherTool } from './tools/weather-tool';
 import { multiAgentTaskWorkflow } from './workflows';
@@ -29,6 +31,7 @@ export const mastra = new Mastra({
   agents: {
     agent,
     weatherAgent,
+    generativeUiAgent,
     supervisorAgent,
     researcherAgent,
     analyzerAgent,
@@ -41,6 +44,7 @@ export const mastra = new Mastra({
     startScheduleTool,
     stopScheduleTool,
     weatherTool,
+    openWebSearchTool,
   },
   scorers: registeredScorers,
   server: {

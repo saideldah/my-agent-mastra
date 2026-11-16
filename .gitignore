@@ -18,3 +18,9 @@ src/mastra/public/
 !.env.example
 .DS_Store
 *.tsbuildinfo
+.infisical.yaml
+playwright-report/
+test-results/
+project.json
+logs/
+workspace/

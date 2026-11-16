@@ -8,6 +8,7 @@
     "dev": "mastra dev",
     "build": "mastra build",
     "start": "mastra start",
+    "test": "node --test tests/*.test.ts",
     "eval:seed": "node --import tsx src/mastra/evals/datasets/golden-cases.ts",
     "eval:ci": "node --import tsx src/mastra/evals/ci/run-regression.ts"
   },
@@ -19,6 +20,9 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
+    "@json-render/core": "^0.23.1",
+    "@json-render/react": "^0.23.1",
+    "@json-render/shadcn": "^0.23.1",
     "@mastra/core": "1.83.0",
     "@mastra/duckdb": "1.19.0",
     "@mastra/evals": "^1.10.11",

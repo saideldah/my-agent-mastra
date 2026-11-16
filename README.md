@@ -1,5 +1,27 @@
 # my-mastra-app
 
+## Quick Start (Mastra Intelligence Suite)
+
+Run the API server alongside the React interface:
+
+```shell
+# 1. Start Mastra server (port 4111)
+npm run dev
+
+# 2. In a second terminal, start the frontend workspace (port 5173)
+cd weather-react-app
+npm run dev
+```
+
+Sign in at [http://localhost:5173](http://localhost:5173) using the configured account credentials (`Continue with Evaluator Account`) to access:
+- **Command Center** (`generative-ui-agent` streaming live operational dashboards, tables, and interactive planners)
+- **Weather Advisory** (`weather-agent` interactive location choice cards + live meteorological telemetry)
+- **Workspace & Schedules** (`agent` with `LocalFilesystem` / `LocalSandbox` approval gates, recurring cron schedules, and web search)
+- **Decision Room** (`supervisor-agent` coordinating `Researcher → Analyzer → Writer` with specialist handoff tracking and live audits)
+- **Research Pipeline** (`multi-agent-task-workflow` streaming `research-step → analyze-step → write-step` with rendered Markdown outputs and evaluation scorecards)
+
+---
+
 Welcome to your new [Mastra](https://mastra.ai) project! We're excited to see what you build.
 
 This starter provides you with a general-purpose Mastra agent that can research current information, manage multi-step tasks, work with local files, run approved shell commands, and create recurring schedules.

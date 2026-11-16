@@ -1,6 +1,13 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from 'zod';
-import { reportRubricScorer, taskCompletenessScorer } from '../evals/scorers';
+import {
+  workflowReportScorer,
+  workflowStageCompletenessScorer,
+} from '../evals/scorers';
+import {
+  extractProseAndValidatedSpec,
+  getWorkflowWriterGenUiAddendum,
+} from '../genui/catalog';
 
 const taskInputSchema = z.object({
   topic: z.string().min(1).describe('The topic or problem statement to investigate'),
@@ -25,6 +32,7 @@ const analysisOutputSchema = z.object({
 
 const finalReportSchema = z.object({
   report: z.string(),
+  uiSpec: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 
 /**
@@ -36,7 +44,7 @@ export const researchStep = createStep({
   outputSchema: researchOutputSchema,
   scorers: {
     completeness: {
-      scorer: taskCompletenessScorer,
+      scorer: workflowStageCompletenessScorer,
       sampling: { type: 'ratio', rate: 0.5 },
     },
   },
@@ -65,7 +73,7 @@ export const analyzeStep = createStep({
   outputSchema: analysisOutputSchema,
   scorers: {
     completeness: {
-      scorer: taskCompletenessScorer,
+      scorer: workflowStageCompletenessScorer,
       sampling: { type: 'ratio', rate: 0.5 },
     },
   },
@@ -93,7 +101,7 @@ export const writeStep = createStep({
   outputSchema: finalReportSchema,
   scorers: {
     reportRubric: {
-      scorer: reportRubricScorer,
+      scorer: workflowReportScorer,
       sampling: { type: 'ratio', rate: 1.0 },
     },
   },
@@ -101,12 +109,14 @@ export const writeStep = createStep({
     requestContext.set('audience', inputData.audience);
     const writer = mastra.getAgent('writerAgent');
     const response = await writer.generate(
-      `Draft a final executive report on "${inputData.topic}" for ${inputData.audience}.\n\n## Research Findings\n${inputData.researchFindings}\n\n## Analysis & Recommendations\n${inputData.analysis}`,
+      `Draft a final executive report on "${inputData.topic}" for ${inputData.audience}.\n\n## Research Findings\n${inputData.researchFindings}\n\n## Analysis & Recommendations\n${inputData.analysis}\n\n${getWorkflowWriterGenUiAddendum()}`,
       { requestContext },
     );
 
+    const { prose, spec } = extractProseAndValidatedSpec(response.text);
     return {
-      report: response.text,
+      report: prose.trim() || response.text,
+      uiSpec: spec ? (spec as unknown as Record<string, unknown>) : null,
     };
   },
 });

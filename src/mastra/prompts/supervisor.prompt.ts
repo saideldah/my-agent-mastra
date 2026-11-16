@@ -1,4 +1,5 @@
 import type { RequestContext } from '@mastra/core/request-context';
+import { getSupervisorGenUiAddendum } from '../genui/catalog';
 import { SHARED_GUARDRAILS_BLOCK, SHARED_REPORT_RUBRIC } from './shared-blocks';
 
 export const SUPERVISOR_DESCRIPTION =
@@ -27,7 +28,7 @@ Target Audience: ${audience}
 3. **Analyze**: Pass the research reference ID via \`contextFromRefs\` to \`analyzerAgent\` for a recommendation, trade-offs, risks, and specific challenges to the evidence.
 4. **Evidence Review**: Send the analyzer's challenges and analysis reference back to \`researcherAgent\`, together with the original research reference via \`contextFromRefs\`, to check the evidence and resolve or acknowledge gaps.
 5. **Draft**: Pass all research, analysis, and evidence-review result references via \`contextFromRefs\` to \`writerAgent\` to produce a concise final decision brief for the target audience.
-6. **Verify**: After the writer responds, ensure the brief satisfies all quality criteria and return it to the user.
+6. **Verify**: After the writer responds, output the complete decision brief directly so it satisfies all quality criteria, followed by live Generative UI patches for the executive dashboard.
 
 ## Handoff Requirements
 - Each delegation must explicitly identify whose earlier findings the specialist is responding to and what it should do with them.
@@ -38,5 +39,7 @@ ${SHARED_GUARDRAILS_BLOCK}
 
 ## Final Deliverable Success Criteria
 ${SHARED_REPORT_RUBRIC}
+
+${getSupervisorGenUiAddendum()}
 `.trim();
 };
